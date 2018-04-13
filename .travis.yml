@@ -12,3 +12,4 @@ script:
   - flake8
   - PYTHONPATH=. mypy $(find hashdial tests -name '*.py')
   - PYTHONPATH=. pytest
+  - cd docs && PYTHONPATH=.. make html
