@@ -1,7 +1,6 @@
 import hashdial
-import time
 
-from typing import Dict
+from typing import Dict  # noqa (mypy/lint fight)
 
 
 def test_hfloat_distribution() -> None:

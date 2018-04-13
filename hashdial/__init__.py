@@ -1,10 +1,10 @@
 """Implements a hash dial for hash based decision making.
 """
 import hashlib
-import struct
 
 from typing import TypeVar
 from typing import List
+
 
 def _hfloat(b: bytes) -> float:
     h = hashlib.sha256()
