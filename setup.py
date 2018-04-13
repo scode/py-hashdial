@@ -41,7 +41,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='hashdial',
-    packages=find_packages(exclude=['docs', 'tests']),
+    packages=find_packages(exclude=['docs', 'scripts', 'tests']),
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
