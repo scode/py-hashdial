@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.3"
   - "3.4"
   - "3.5"
   - "3.6"
@@ -10,5 +9,6 @@ install:
 
 script:
   # TOOD: I feel there's a better way than poking at PYTHONPATH here.
+  - flake8
   - PYTHONPATH=. mypy --strict $(find hashdial tests -name '*.py')
   - PYTHONPATH=. pytest
