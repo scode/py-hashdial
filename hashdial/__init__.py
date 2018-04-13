@@ -8,28 +8,30 @@ from typing import TypeVar
 from typing import List
 from typing import Optional
 
+DEFAULT_SEED = b''
 
 # Maximum integer representable exactly as a float.
 _MAX_FLOAT_REPRESENTABLE_INT = 2**(sys.float_info.mant_dig) - 1
 _MIN_FLOAT_REPRESENTABLE_INT = -_MAX_FLOAT_REPRESENTABLE_INT
 
 
-def _hfloat(b: bytes) -> float:
+def _hfloat(b: bytes, seed: bytes) -> float:
     h = hashlib.sha256()
+    h.update(seed)
     h.update(b)
     return float(int(h.hexdigest()[0:16], 16)) / 2**64
 
 
-def is_selected(probability: float, b: bytes) -> bool:
+def is_selected(probability: float, b: bytes, *, seed: bytes=DEFAULT_SEED) -> bool:
     if probability < 0.0:
         raise ValueError('probability must be >= 0.0'.format(probability))
     if probability > 1.0:
         raise ValueError('probability must be <= 1.0'.format(probability))
 
-    return _hfloat(b) < probability
+    return _hfloat(b, seed) < probability
 
 
-def select_n(stop: int, b: bytes, *, start: Optional[int]=None) -> int:
+def select_n(stop: int, b: bytes, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
     if start is None:
         start = 0
 
@@ -40,11 +42,11 @@ def select_n(stop: int, b: bytes, *, start: Optional[int]=None) -> int:
         raise ValueError('stop/start must be in range [{}, {}] due to limitations of floats',
                          _MIN_FLOAT_REPRESENTABLE_INT, _MAX_FLOAT_REPRESENTABLE_INT)
 
-    return int(start + math.floor((stop - start) * _hfloat(b)))
+    return int(start + math.floor((stop - start) * _hfloat(b, seed)))
 
 
 BucketType = TypeVar('BucketType')
 
 
-def select_bucket(buckets: List[BucketType], b: bytes) -> BucketType:
-    return buckets[select_n(len(buckets), b)]
+def select_bucket(buckets: List[BucketType], b: bytes, *, seed: bytes=DEFAULT_SEED) -> BucketType:
+    return buckets[select_n(len(buckets), b, seed=seed)]
