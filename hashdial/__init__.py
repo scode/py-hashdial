@@ -6,7 +6,7 @@ import struct
 from typing import TypeVar
 from typing import List
 
-def _hfloat(b) -> float:
+def _hfloat(b: bytes) -> float:
     h = hashlib.sha256()
     h.update(b)
     return float(int(h.hexdigest()[0:16], 16)) / 2**64

@@ -10,4 +10,5 @@ install:
 
 script:
   # TOOD: I feel there's a better way than poking at PYTHONPATH here.
+  - PYTHONPATH=. mypy --strict $(find hashdial tests -name '*.py')
   - PYTHONPATH=. pytest
