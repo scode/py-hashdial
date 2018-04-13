@@ -57,3 +57,19 @@ def test_select_n_large_val() -> None:
         hashdial.select_n(2**63, b'')
     with pytest.raises(ValueError):
         hashdial.select_n(-(2**63), b'')
+
+
+def test_select_bucket() -> None:
+    NUM_SAMPLES = 10000
+
+    values = {}  # type: Dict[int, int]
+
+    for n in range(NUM_SAMPLES):
+        selected = hashdial.select_bucket([-1, 0, 1], '{}'.format(n).encode('utf-8'))
+        values[selected] = values.get(selected, 0) + 1
+
+    assert set(values.keys()) == {-1, 0, 1}
+
+    for val in [-1, 0, 1]:
+        assert values[val] > NUM_SAMPLES * 0.33 * 0.9
+        assert values[val] < NUM_SAMPLES * 0.33 * 1.1
