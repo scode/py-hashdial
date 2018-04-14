@@ -5,7 +5,7 @@ from typing import Dict  # noqa (mypy/lint fight)
 import hashdial
 
 
-def test_hfloat_diis_selectedstribution() -> None:
+def test_hfloat_distribution() -> None:
     NUM_SAMPLES = 10000
     NUM_BUCKETS = 10
 
