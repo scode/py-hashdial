@@ -20,7 +20,7 @@ def _hfloat(b: bytes, seed: bytes) -> float:
     return float(int(h.hexdigest()[0:16], 16)) / 2**64
 
 
-def is_selected(probability: float, b: bytes, *, seed: bytes=DEFAULT_SEED) -> bool:
+def is_accepted(probability: float, b: bytes, *, seed: bytes=DEFAULT_SEED) -> bool:
     if probability < 0.0:
         raise ValueError('probability must be >= 0.0'.format(probability))
     if probability > 1.0:
