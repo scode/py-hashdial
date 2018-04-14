@@ -21,6 +21,22 @@ def _hfloat(b: bytes, seed: bytes) -> float:
 
 
 def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
+    """
+    Test whether b is to be accepted in an imagined set of possible values which each are accepted by the given
+    probability.
+
+    Example which retains 25% of lines read from stdin::
+
+        for line in sys.stdin:
+            if is_accepted(line.encode('utf-8'), 0.25):
+                sys.stdout.write(line)
+
+    :param b: The bytes to hash.
+    :param probability: The probability of a given b being considered accepted. Must be in range [0, 1].
+    :param seed: Seed to hash prior to hashing b.
+
+    :return: Whether b is accepted.
+    """
     if probability < 0.0:
         raise ValueError('probability must be >= 0.0'.format(probability))
     if probability > 1.0:
@@ -30,6 +46,25 @@ def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bo
 
 
 def select_n(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
+    """
+    Select an integer in a range by hashing b.
+
+    Example partitioned filtering of a workload on stdin assuming this is partition 3 out of 10::
+
+        for line in sys.stdin:
+            if select_n(line.encode('utf-8'), 10) == 3:
+                sys.stdout.write(line)
+
+    The difference between stop and start must be sufficiently small to be exactly representable as a
+    float (no larger than ``2**(sys.float_info.mant_dig) - 1``).
+
+    :param b: The bytes to hash.
+    :param stop: The *exclusive* end of the range of integers among which to select.
+    :param start: The *inclusive* start of the range of integers among which to select.
+    :param seed: Seed to hash prior to hashing b.
+
+    :return: The selected integer.
+    """
     if start is None:
         start = 0
 
@@ -47,4 +82,19 @@ BucketType = TypeVar('BucketType')
 
 
 def select_bucket(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+    """
+    Select one of the elements in buckets based on the hash of b.
+
+    Example partitioning of input on stdin into buckets::
+
+        bucketed_lines = {}  # type: Dict[int, str]
+        for line in sys.stdin:
+            buckets[select_bucket(b, [0, 1, 2, 3, 4, 5])] = line
+
+    :param b:
+    :param buckets:
+    :param seed: Seed to hash prior to hashing b.
+
+    :return: The appropriate bucket.
+    """
     return buckets[select_n(b, len(buckets), seed=seed)]
