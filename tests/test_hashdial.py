@@ -44,13 +44,13 @@ def test_is_accepted_seed() -> None:
     assert hashdial.is_accepted(b't', 0.5) != hashdial.is_accepted(b't', 0.5, seed=b'test2')
 
 
-def test_select_n_distribution() -> None:
+def test_range_distribution() -> None:
     NUM_SAMPLES = 10000
 
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.select_n('{}'.format(n).encode('utf-8'), 2, start=-1)
+        selected = hashdial.range('{}'.format(n).encode('utf-8'), 2, start=-1)
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -60,24 +60,24 @@ def test_select_n_distribution() -> None:
         assert values[val] < NUM_SAMPLES * 0.33 * 1.1
 
 
-def test_select_n_seed() -> None:
-    assert hashdial.select_n(b't', 2) != hashdial.select_n(b't', 2, seed=b'test2')
+def test_range_seed() -> None:
+    assert hashdial.range(b't', 2) != hashdial.range(b't', 2, seed=b'test2')
 
 
-def test_select_n_large_diff() -> None:
+def test_range_large_diff() -> None:
     with pytest.raises(ValueError):
-        hashdial.select_n(b'', 2**63)
+        hashdial.range(b'', 2 ** 63)
     with pytest.raises(ValueError):
-        hashdial.select_n(start=-(2**63), stop=0, b=b'')
+        hashdial.range(start=-(2 ** 63), stop=0, b=b'')
 
 
-def test_select_bucket() -> None:
+def test_choice() -> None:
     NUM_SAMPLES = 10000
 
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.select_bucket('{}'.format(n).encode('utf-8'), [-1, 0, 1])
+        selected = hashdial.choice('{}'.format(n).encode('utf-8'), [-1, 0, 1])
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -87,5 +87,5 @@ def test_select_bucket() -> None:
         assert values[val] < NUM_SAMPLES * 0.33 * 1.1
 
 
-def test_select_bucket_seed() -> None:
-    assert hashdial.select_bucket(b't', [0, 1]) != hashdial.select_bucket(b't', [0, 1], seed=b'test2')
+def test_choice_seed() -> None:
+    assert hashdial.choice(b't', [0, 1]) != hashdial.choice(b't', [0, 1], seed=b'test2')

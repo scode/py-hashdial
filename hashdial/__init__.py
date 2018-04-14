@@ -45,7 +45,7 @@ def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bo
     return _hfloat(b, seed) < probability
 
 
-def select_n(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
+def range(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
     """
     Select an integer in a range by hashing b.
 
@@ -81,7 +81,7 @@ def select_n(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFA
 BucketType = TypeVar('BucketType')
 
 
-def select_bucket(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+def choice(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
     """
     Select one of the elements in buckets based on the hash of b.
 
@@ -97,4 +97,4 @@ def select_bucket(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SE
 
     :return: The appropriate bucket.
     """
-    return buckets[select_n(b, len(buckets), seed=seed)]
+    return buckets[range(b, len(buckets), seed=seed)]
