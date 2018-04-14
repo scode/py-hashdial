@@ -15,6 +15,12 @@ example:
 * Applying filtering of data which is already filtered using the same mechanism, requires use of a different seed to
   ensure non-biased input.
 
+Determinism across versions
+---------------------------
+
+Any change to an existing function (including default seed and choice of hashing algorithm) that would alter the
+output of the function given the same input, will not be done without a major version bump to the library.
+
 Functions
 ---------
 """
