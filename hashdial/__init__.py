@@ -91,10 +91,15 @@ def choice(b: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> 
         for line in sys.stdin:
             buckets[select_bucket(b, [0, 1, 2, 3, 4, 5])] = line
 
-    :param b:
-    :param buckets:
+    :param b: The bytes to hash.
+    :param seq: The sequence from which to select an element. Must be non-empty, or, ValueError is raised.
     :param seed: Seed to hash prior to hashing b.
+
+    :raise ValueError: If seq is empty.
 
     :return: The appropriate bucket.
     """
+    if not seq:
+        raise ValueError('non-empty sequence required')
+
     return seq[range(b, len(seq), seed=seed)]

@@ -89,3 +89,8 @@ def test_choice() -> None:
 
 def test_choice_seed() -> None:
     assert hashdial.choice(b't', [0, 1]) != hashdial.choice(b't', [0, 1], seed=b'test2')
+
+
+def test_choice_empty_seq() -> None:
+    with pytest.raises(ValueError):
+        hashdial.choice(b'', [])
