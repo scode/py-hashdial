@@ -5,7 +5,7 @@ from typing import Dict  # noqa (mypy/lint fight)
 import hashdial
 
 
-def test_hfloat_distribution() -> None:
+def test_hfloat_diis_selectedstribution() -> None:
     NUM_SAMPLES = 10000
     NUM_BUCKETS = 10
 
@@ -33,7 +33,7 @@ def test_is_accepted_distribution() -> None:
 
     value_count = {}  # type: Dict[bool,int]
     for n in range(NUM_SAMPLES):
-        b = hashdial.is_accepted(PROBABILITY, '{}'.format(n).encode('utf-8'))
+        b = hashdial.is_accepted('{}'.format(n).encode('utf-8'), PROBABILITY)
         value_count[b] = value_count.get(b, 0) + 1
 
     assert value_count[True] > PROBABILITY * NUM_SAMPLES * 0.9
@@ -41,7 +41,7 @@ def test_is_accepted_distribution() -> None:
 
 
 def test_is_accepted_seed() -> None:
-    assert hashdial.is_accepted(0.5, b't') != hashdial.is_accepted(0.5, b't', seed=b'test2')
+    assert hashdial.is_accepted(b't', 0.5) != hashdial.is_accepted(b't', 0.5, seed=b'test2')
 
 
 def test_select_n_distribution() -> None:
@@ -50,7 +50,7 @@ def test_select_n_distribution() -> None:
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.select_n(2, '{}'.format(n).encode('utf-8'), start=-1)
+        selected = hashdial.select_n('{}'.format(n).encode('utf-8'), 2, start=-1)
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -61,12 +61,12 @@ def test_select_n_distribution() -> None:
 
 
 def test_select_n_seed() -> None:
-    assert hashdial.select_n(2, b't') != hashdial.select_n(2, b't', seed=b'test2')
+    assert hashdial.select_n(b't', 2) != hashdial.select_n(b't', 2, seed=b'test2')
 
 
 def test_select_n_large_diff() -> None:
     with pytest.raises(ValueError):
-        hashdial.select_n(2**63, b'')
+        hashdial.select_n(b'', 2**63)
     with pytest.raises(ValueError):
         hashdial.select_n(start=-(2**63), stop=0, b=b'')
 
@@ -77,7 +77,7 @@ def test_select_bucket() -> None:
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.select_bucket([-1, 0, 1], '{}'.format(n).encode('utf-8'))
+        selected = hashdial.select_bucket('{}'.format(n).encode('utf-8'), [-1, 0, 1])
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -88,4 +88,4 @@ def test_select_bucket() -> None:
 
 
 def test_select_bucket_seed() -> None:
-    assert hashdial.select_bucket([0, 1], b't') != hashdial.select_bucket([0, 1], b't', seed=b'test2')
+    assert hashdial.select_bucket(b't', [0, 1]) != hashdial.select_bucket(b't', [0, 1], seed=b'test2')

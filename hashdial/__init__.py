@@ -20,7 +20,7 @@ def _hfloat(b: bytes, seed: bytes) -> float:
     return float(int(h.hexdigest()[0:16], 16)) / 2**64
 
 
-def is_accepted(probability: float, b: bytes, *, seed: bytes=DEFAULT_SEED) -> bool:
+def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
     if probability < 0.0:
         raise ValueError('probability must be >= 0.0'.format(probability))
     if probability > 1.0:
@@ -29,7 +29,7 @@ def is_accepted(probability: float, b: bytes, *, seed: bytes=DEFAULT_SEED) -> bo
     return _hfloat(b, seed) < probability
 
 
-def select_n(stop: int, b: bytes, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
+def select_n(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
     if start is None:
         start = 0
 
@@ -46,5 +46,5 @@ def select_n(stop: int, b: bytes, *, start: Optional[int]=None, seed: bytes=DEFA
 BucketType = TypeVar('BucketType')
 
 
-def select_bucket(buckets: List[BucketType], b: bytes, *, seed: bytes=DEFAULT_SEED) -> BucketType:
-    return buckets[select_n(len(buckets), b, seed=seed)]
+def select_bucket(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+    return buckets[select_n(b, len(buckets), seed=seed)]
