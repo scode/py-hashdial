@@ -1,4 +1,22 @@
 """Implements a hash dial for hash based decision making.
+
+Implements, through hashing, decision making that is deterministic on input, but probabilistic across a set of inputs.
+
+Seeds
+-----
+
+All functions take an optional ``seed`` keyword argument. It is intended to be used in cases where different uses
+of the library require orthogonal decision making, or it is desirable to make the decision making unpredictable. For
+example:
+
+* Avoiding untrusted input being tailored to be biased with respect to the hashing algorithm requires use of a seed
+  that is not known to the untrusted source.
+
+* Applying filtering of data which is already filtered using the same mechanism, requires use of a different seed to
+  ensure non-biased input.
+
+Functions
+---------
 """
 import hashlib
 import math
