@@ -64,11 +64,11 @@ def test_select_n_seed() -> None:
     assert hashdial.select_n(2, b't') != hashdial.select_n(2, b't', seed=b'test2')
 
 
-def test_select_n_large_val() -> None:
+def test_select_n_large_diff() -> None:
     with pytest.raises(ValueError):
         hashdial.select_n(2**63, b'')
     with pytest.raises(ValueError):
-        hashdial.select_n(-(2**63), b'')
+        hashdial.select_n(start=-(2**63), stop=0, b=b'')
 
 
 def test_select_bucket() -> None:
@@ -87,5 +87,5 @@ def test_select_bucket() -> None:
         assert values[val] < NUM_SAMPLES * 0.33 * 1.1
 
 
-def test_select_buckeT_seed() -> None:
+def test_select_bucket_seed() -> None:
     assert hashdial.select_bucket([0, 1], b't') != hashdial.select_bucket([0, 1], b't', seed=b'test2')

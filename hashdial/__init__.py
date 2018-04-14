@@ -10,9 +10,7 @@ from typing import Optional
 
 DEFAULT_SEED = b''
 
-# Maximum integer representable exactly as a float.
 _MAX_FLOAT_REPRESENTABLE_INT = 2**(sys.float_info.mant_dig) - 1
-_MIN_FLOAT_REPRESENTABLE_INT = -_MAX_FLOAT_REPRESENTABLE_INT
 
 
 def _hfloat(b: bytes, seed: bytes) -> float:
@@ -38,9 +36,9 @@ def select_n(stop: int, b: bytes, *, start: Optional[int]=None, seed: bytes=DEFA
     if stop <= start:
         raise ValueError('stop ({}) must be > start ({})'.format(stop, start))
 
-    if start < _MIN_FLOAT_REPRESENTABLE_INT or stop > _MAX_FLOAT_REPRESENTABLE_INT:
-        raise ValueError('stop/start must be in range [{}, {}] due to limitations of floats',
-                         _MIN_FLOAT_REPRESENTABLE_INT, _MAX_FLOAT_REPRESENTABLE_INT)
+    if stop - start > _MAX_FLOAT_REPRESENTABLE_INT:
+        raise ValueError('stop-start must be <= {} due to limitations of floats',
+                         _MAX_FLOAT_REPRESENTABLE_INT)
 
     return int(start + math.floor((stop - start) * _hfloat(b, seed)))
 
