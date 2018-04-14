@@ -5,8 +5,8 @@ import math
 import sys
 
 from typing import TypeVar
-from typing import List
 from typing import Optional
+from typing import Sequence
 
 DEFAULT_SEED = b''
 
@@ -81,9 +81,9 @@ def range(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT
 BucketType = TypeVar('BucketType')
 
 
-def choice(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+def choice(b: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
     """
-    Select one of the elements in buckets based on the hash of b.
+    Select one of the elements in seq based on the hash of b.
 
     Example partitioning of input on stdin into buckets::
 
@@ -97,4 +97,4 @@ def choice(b: bytes, buckets: List[BucketType], *, seed: bytes=DEFAULT_SEED) -> 
 
     :return: The appropriate bucket.
     """
-    return buckets[range(b, len(buckets), seed=seed)]
+    return seq[range(b, len(seq), seed=seed)]
