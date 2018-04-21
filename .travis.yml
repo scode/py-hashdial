@@ -9,7 +9,5 @@ install:
 
 script:
   # TOOD: I feel there's a better way than poking at PYTHONPATH here.
-  - flake8
-  - PYTHONPATH=. mypy $(find hashdial tests -name '*.py')
-  - PYTHONPATH=. pytest
-  - cd docs && PYTHONPATH=.. make html
+  - scripts/tests.sh
+  - scripts/docs.sh
