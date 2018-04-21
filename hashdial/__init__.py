@@ -2,18 +2,28 @@
 
 Implements, through hashing, decision making that is deterministic on input, but probabilistic across a set of inputs.
 
+For example, suppose a set of components in a distributed system wish to emit a log entry for 1% of requests - but each
+component should log the *same* 1% of requests, they could do so as such::
+
+    if hashdial.is_accepted(request.id, 0.01):
+        log_request(request)
+
 Seeds
 -----
 
 All functions take an optional ``seed`` keyword argument. It is intended to be used in cases where different uses
-of the library require orthogonal decision making, or it is desirable to make the decision making unpredictable. For
-example:
+of the library require orthogonal decision making, or it is desirable to make the decision making unpredictable. In
+particular:
 
 * Avoiding untrusted input being tailored to be biased with respect to the hashing algorithm requires use of a seed
   that is not known to the untrusted source.
 
-* Applying filtering of data which is already filtered using the same mechanism, requires use of a different seed to
-  ensure non-biased input.
+* Filtering data which is the output of a previous filtering step using the same mechansim, requires use of a different
+  seed in order to get correct behavior.
+
+For example, filtering to keep 1% of lines in a file followed by applying the same filter again will result in no
+change in output relative to just filtering once - since line that was kept the first time will also be kept the
+second time.
 
 Determinism across versions
 ---------------------------
@@ -21,8 +31,8 @@ Determinism across versions
 Any change to an existing function (including default seed and choice of hashing algorithm) that would alter the
 output of the function given the same input, will not be done without a major version bump to the library.
 
-Functions
----------
+API
+---
 """
 import hashlib
 import math
@@ -72,7 +82,7 @@ def range(b: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int
     """
     Select an integer in range ``[start, stop)`` by hashing b.
 
-    Example partitioned filtering of a workload on stdin assuming this is partition 3 out of 10::
+    Example partitioned filtering of a workload on stdin assuming this is partition 3 out of 10:
 
         for line in sys.stdin:
             if range(line.encode('utf-8'), 10) == 3:
@@ -86,7 +96,7 @@ def range(b: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int
     :param start: The *inclusive* start of the range of integers among which to select.
     :param seed: Seed to hash prior to hashing b.
 
-    :return: The selected integer.h
+    :return: The selected integer.
     """
     if stop <= start:
         raise ValueError('stop ({}) must be > start ({})'.format(stop, start))
