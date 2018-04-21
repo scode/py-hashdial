@@ -82,7 +82,7 @@ def range(key: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> i
     """
     Select an integer in range ``[start, stop)`` by hashing ``key``.
 
-    Example partitioned filtering of a workload on ``stdin`` assuming this is partition 3 out of 10:
+    Example partitioned filtering of a workload on ``stdin`` assuming this is partition 3 out of 10::
 
         for line in sys.stdin:
             if range(line.encode('utf-8'), 10) == 3:
