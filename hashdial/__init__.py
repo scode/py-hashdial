@@ -53,9 +53,9 @@ def _hfloat(b: bytes, seed: bytes) -> float:
     return float(int(h.hexdigest()[0:16], 16)) / 2**64
 
 
-def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
+def is_accepted(key: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
     """
-    Test whether b is to be accepted in an imagined set of possible values which each are accepted by the given
+    Test whether ``key`` is to be accepted in an imagined set of possible values which each are accepted by the given
     probability.
 
     Example which retains 25% of lines read from stdin::
@@ -64,25 +64,25 @@ def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bo
             if is_accepted(line.encode('utf-8'), 0.25):
                 sys.stdout.write(line)
 
-    :param b: The bytes to hash.
-    :param probability: The probability of a given b being considered accepted. Must be in range [0, 1].
-    :param seed: Seed to hash prior to hashing b.
+    :param key: The bytes to hash.
+    :param probability: The probability of a given ``key`` being considered accepted. Must be in range [0, 1].
+    :param seed: Seed to hash prior to hashing ``key``.
 
-    :return: Whether b is accepted.
+    :return: Whether ``key`` is accepted.
     """
     if probability < 0.0:
         raise ValueError('probability must be >= 0.0'.format(probability))
     if probability > 1.0:
         raise ValueError('probability must be <= 1.0'.format(probability))
 
-    return _hfloat(b, seed) < probability
+    return _hfloat(key, seed) < probability
 
 
-def range(b: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int:
+def range(key: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int:
     """
-    Select an integer in range ``[start, stop)`` by hashing b.
+    Select an integer in range ``[start, stop)`` by hashing ``key``.
 
-    Example partitioned filtering of a workload on stdin assuming this is partition 3 out of 10:
+    Example partitioned filtering of a workload on ``stdin`` assuming this is partition 3 out of 10:
 
         for line in sys.stdin:
             if range(line.encode('utf-8'), 10) == 3:
@@ -91,10 +91,10 @@ def range(b: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int
     The difference between stop and start must be sufficiently small to be exactly representable as a
     float (no larger than ``2**(sys.float_info.mant_dig) - 1``).
 
-    :param b: The bytes to hash.
+    :param key: The bytes to hash.
     :param stop: The *exclusive* end of the range of integers among which to select.
     :param start: The *inclusive* start of the range of integers among which to select.
-    :param seed: Seed to hash prior to hashing b.
+    :param seed: Seed to hash prior to hashing ``key``.
 
     :return: The selected integer.
     """
@@ -105,31 +105,31 @@ def range(b: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int
         raise ValueError('stop-start must be <= {} due to limitations of floats',
                          _MAX_FLOAT_REPRESENTABLE_INT)
 
-    return int(start + math.floor((stop - start) * _hfloat(b, seed)))
+    return int(start + math.floor((stop - start) * _hfloat(key, seed)))
 
 
 BucketType = TypeVar('BucketType')
 
 
-def choice(b: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+def choice(key: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
     """
-    Select one of the elements in seq based on the hash of b.
+    Select one of the elements in seq based on the hash of ``key``.
 
-    Example partitioning of input on stdin into buckets::
+    Example partitioning of input on ``stdin`` into buckets::
 
         bucketed_lines = {}  # type: Dict[int, str]
         for line in sys.stdin:
             buckets[choice(b, [0, 1, 2, 3, 4, 5])] = line
 
-    :param b: The bytes to hash.
-    :param seq: The sequence from which to select an element. Must be non-empty, or, ValueError is raised.
+    :param key: The bytes to hash.
+    :param seq: The sequence from which to select an element. Must be non-empty.
     :param seed: Seed to hash prior to hashing b.
 
-    :raise ValueError: If seq is empty.
+    :raise ValueError: If ``seq`` is empty.
 
-    :return: The appropriate bucket.
+    :return: One of the elements in ``seq``.
     """
     if not seq:
         raise ValueError('non-empty sequence required')
 
-    return seq[range(b, len(seq), seed=seed)]
+    return seq[range(key, len(seq), seed=seed)]

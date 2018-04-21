@@ -68,7 +68,7 @@ def test_range_large_diff() -> None:
     with pytest.raises(ValueError):
         hashdial.range(b'', 2 ** 63)
     with pytest.raises(ValueError):
-        hashdial.range(start=-(2 ** 63), stop=0, b=b'')
+        hashdial.range(start=-(2 ** 63), stop=0, key=b'')
 
 
 def test_choice() -> None:
