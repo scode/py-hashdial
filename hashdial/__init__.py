@@ -29,7 +29,6 @@ import math
 import sys
 
 from typing import TypeVar
-from typing import Optional
 from typing import Sequence
 
 DEFAULT_SEED = b''
@@ -69,14 +68,14 @@ def is_accepted(b: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bo
     return _hfloat(b, seed) < probability
 
 
-def range(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT_SEED) -> int:
+def range(b: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int:
     """
-    Select an integer in a range by hashing b.
+    Select an integer in range ``[start, stop)`` by hashing b.
 
     Example partitioned filtering of a workload on stdin assuming this is partition 3 out of 10::
 
         for line in sys.stdin:
-            if select_n(line.encode('utf-8'), 10) == 3:
+            if range(line.encode('utf-8'), 10) == 3:
                 sys.stdout.write(line)
 
     The difference between stop and start must be sufficiently small to be exactly representable as a
@@ -87,11 +86,8 @@ def range(b: bytes, stop: int, *, start: Optional[int]=None, seed: bytes=DEFAULT
     :param start: The *inclusive* start of the range of integers among which to select.
     :param seed: Seed to hash prior to hashing b.
 
-    :return: The selected integer.
+    :return: The selected integer.h
     """
-    if start is None:
-        start = 0
-
     if stop <= start:
         raise ValueError('stop ({}) must be > start ({})'.format(stop, start))
 
@@ -113,7 +109,7 @@ def choice(b: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> 
 
         bucketed_lines = {}  # type: Dict[int, str]
         for line in sys.stdin:
-            buckets[select_bucket(b, [0, 1, 2, 3, 4, 5])] = line
+            buckets[choice(b, [0, 1, 2, 3, 4, 5])] = line
 
     :param b: The bytes to hash.
     :param seq: The sequence from which to select an element. Must be non-empty, or, ValueError is raised.
