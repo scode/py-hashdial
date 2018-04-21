@@ -5,7 +5,7 @@ Implements, through hashing, decision making that is deterministic on input, but
 For example, suppose a set of components in a distributed system wish to emit a log entry for 1% of requests - but each
 component should log the *same* 1% of requests, they could do so as such::
 
-    if hashdial.is_accepted(request.id, 0.01):
+    if hashdial.decide(request.id, 0.01):
         log_request(request)
 
 Seeds
