@@ -71,13 +71,13 @@ def test_range_large_diff() -> None:
         hashdial.range(start=-(2 ** 63), stop=0, key=b'')
 
 
-def test_choice() -> None:
+def test_select() -> None:
     NUM_SAMPLES = 10000
 
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.choice('{}'.format(n).encode('utf-8'), [-1, 0, 1])
+        selected = hashdial.select('{}'.format(n).encode('utf-8'), [-1, 0, 1])
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -87,10 +87,10 @@ def test_choice() -> None:
         assert values[val] < NUM_SAMPLES * 0.33 * 1.1
 
 
-def test_choice_seed() -> None:
-    assert hashdial.choice(b't', [0, 1]) != hashdial.choice(b't', [0, 1], seed=b'test2')
+def test_select_seed() -> None:
+    assert hashdial.select(b't', [0, 1]) != hashdial.select(b't', [0, 1], seed=b'test2')
 
 
-def test_choice_empty_seq() -> None:
+def test_select_empty_seq() -> None:
     with pytest.raises(ValueError):
-        hashdial.choice(b'', [])
+        hashdial.select(b'', [])
