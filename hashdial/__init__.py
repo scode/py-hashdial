@@ -5,7 +5,7 @@ Implements, through hashing, decision making that is deterministic on input, but
 For example, suppose a set of components in a distributed system wish to emit a log entry for 1% of requests - but each
 component should log the *same* 1% of requests, they could do so as such::
 
-    if hashdial.is_accepted(request.id, 0.01):
+    if hashdial.decide(request.id, 0.01):
         log_request(request)
 
 Seeds
@@ -53,22 +53,22 @@ def _hfloat(b: bytes, seed: bytes) -> float:
     return float(int(h.hexdigest()[0:16], 16)) / 2**64
 
 
-def is_accepted(key: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
+def decide(key: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
     """
-    Test whether ``key`` is to be accepted in an imagined set of possible values which each are accepted by the given
-    probability.
+    Decide between ``True`` and `False`` basd on ``key`` such that the probability of ``True`` for a given input
+    over a large set of unique inputs is ``probability``.
 
-    Example which retains 25% of lines read from stdin::
+    For example, to retain 25% of lines read from stdin::
 
         for line in sys.stdin:
-            if is_accepted(line.encode('utf-8'), 0.25):
+            if decide(line.encode('utf-8'), 0.25):
                 sys.stdout.write(line)
 
     :param key: The bytes to hash.
-    :param probability: The probability of a given ``key`` being considered accepted. Must be in range [0, 1].
+    :param probability: The probability of a given ``key`` returning True. Must be in range [0, 1].
     :param seed: Seed to hash prior to hashing ``key``.
 
-    :return: Whether ``key`` is accepted.
+    :return: Whether to take the action.
     """
     if probability < 0.0:
         raise ValueError('probability must be >= 0.0'.format(probability))

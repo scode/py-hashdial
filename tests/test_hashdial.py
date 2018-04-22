@@ -27,21 +27,21 @@ def test_hfloat_uses_seed() -> None:
     assert hashdial._hfloat(b't', seed=b'') != hashdial._hfloat(b't', seed=b'something')
 
 
-def test_is_accepted_distribution() -> None:
+def test_decide() -> None:
     PROBABILITY = 0.25
     NUM_SAMPLES = 1000
 
     value_count = {}  # type: Dict[bool,int]
     for n in range(NUM_SAMPLES):
-        b = hashdial.is_accepted('{}'.format(n).encode('utf-8'), PROBABILITY)
+        b = hashdial.decide('{}'.format(n).encode('utf-8'), PROBABILITY)
         value_count[b] = value_count.get(b, 0) + 1
 
     assert value_count[True] > PROBABILITY * NUM_SAMPLES * 0.9
     assert value_count[True] < PROBABILITY * NUM_SAMPLES * 1.1
 
 
-def test_is_accepted_seed() -> None:
-    assert hashdial.is_accepted(b't', 0.5) != hashdial.is_accepted(b't', 0.5, seed=b'test2')
+def test_decide_seed() -> None:
+    assert hashdial.decide(b't', 0.5) != hashdial.decide(b't', 0.5, seed=b'test2')
 
 
 def test_range_distribution() -> None:
