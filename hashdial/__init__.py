@@ -111,7 +111,7 @@ def range(key: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> i
 BucketType = TypeVar('BucketType')
 
 
-def choice(key: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+def select(key: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
     """
     Select one of the elements in seq based on the hash of ``key``.
 
