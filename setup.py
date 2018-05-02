@@ -16,6 +16,8 @@ component should log the *same* 1% of requests, they could do so as such::
 
     if hashdial.decide(request.id, 0.01):
         log_request(request)
+
+Take a look at `the documentation <http://py-hashdial.readthedocs.io/en/latest/>`__ for more.
 """,  # noqa
     long_description_content_type='text/x-rst',
     url='https://github.com/scode/py-hashdial',
