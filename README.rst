@@ -9,4 +9,4 @@ Installation
 Documentation
 -------------
 
-Please also see `the documentation <http://py-hashdial.readthedocs.io/en/latest/>`__.
+See `the documentation <http://py-hashdial.readthedocs.io/en/latest/>`__.
