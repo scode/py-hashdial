@@ -43,7 +43,7 @@ component should log the *same* 1% of requests, they could do so as such::
     ],
 
     extras_require={
-        # see requirements.in/requirements.txt
+        # see requirements-dev.in/requirements-dev.txt
     },
 
     project_urls={
