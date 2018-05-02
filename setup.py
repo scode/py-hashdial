@@ -22,11 +22,7 @@ component should log the *same* 1% of requests, they could do so as such::
     author='Peter Schuller',
     author_email='peter.schuller@infidyne.com',
 
-    # Classifiers help users find your project by categorizing it.
-    #
-    # For a list of valid classifiers, see
-    # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers=[  # Optional
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries',
@@ -36,8 +32,10 @@ component should log the *same* 1% of requests, they could do so as such::
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='hashdial',
+    keywords='hashdial hashing decision',
     packages=find_packages(exclude=['docs', 'scripts', 'tests']),
+
+    python_requires='>3.4',
 
     install_requires=[
     ],
