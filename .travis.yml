@@ -8,6 +8,5 @@ install:
   - pip install -r requirements.txt
 
 script:
-  # TOOD: I feel there's a better way than poking at PYTHONPATH here.
   - scripts/tests.sh
   - scripts/docs.sh
