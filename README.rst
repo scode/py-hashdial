@@ -5,7 +5,7 @@ Installation
 ------------
 
 ::
-    pip install hashdial
+   pip install hashdial
 
 Documentation
 -------------
