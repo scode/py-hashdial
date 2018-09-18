@@ -40,6 +40,16 @@ def test_decide() -> None:
     assert value_count[True] < PROBABILITY * NUM_SAMPLES * 1.1
 
 
+def test_decide_bad_probability() -> None:
+    hashdial.decide(''.encode(), 0.5)
+
+    with pytest.raises(ValueError):
+        hashdial.decide(''.encode(), -0.5)
+
+    with pytest.raises(ValueError):
+        hashdial.decide(''.encode(), 1.5)
+
+
 def test_decide_seed() -> None:
     assert hashdial.decide(b't', 0.5) != hashdial.decide(b't', 0.5, seed=b'test2')
 
