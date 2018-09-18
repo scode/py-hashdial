@@ -7,7 +7,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name='hashdial',
-    version='1.0.1',
+    version='1.0.2',
     description='A module implementing hash based decision making',
     long_description="""Implements, through hashing, decision making that is deterministic on input, but probabilistic across a set of inputs.
 
