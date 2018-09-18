@@ -71,9 +71,9 @@ def decide(key: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
     :return: Whether to take the action.
     """
     if probability < 0.0:
-        raise ValueError('probability must be >= 0.0'.format(probability))
+        raise ValueError('probability ({}) must be >= 0.0'.format(probability))
     if probability > 1.0:
-        raise ValueError('probability must be <= 1.0'.format(probability))
+        raise ValueError('probability ({}) must be <= 1.0'.format(probability))
 
     return _hfloat(key, seed) < probability
 
