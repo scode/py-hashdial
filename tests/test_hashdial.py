@@ -43,11 +43,13 @@ def test_decide() -> None:
 def test_decide_bad_probability() -> None:
     hashdial.decide(''.encode(), 0.5)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError) as exc_info:
         hashdial.decide(''.encode(), -0.5)
+    assert str(exc_info.value) == 'probability (-0.5) must be >= 0.0'
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError) as exc_info:
         hashdial.decide(''.encode(), 1.5)
+    assert str(exc_info.value) == 'probability (1.5) must be <= 1.0'
 
 
 def test_decide_seed() -> None:
