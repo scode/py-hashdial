@@ -9,6 +9,8 @@ install:
   - pip install pre-commit
 
 script:
+  # Run individual hooks rather than all because we need to exclude the black auto formatter
+  # in order to allow the build to succeed on Pythons older than 3.6.
   - pre-commit run -a --show-diff-on-failure mypy
   - pre-commit run -a --show-diff-on-failure flake8
   - scripts/tests.sh
