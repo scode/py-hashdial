@@ -1,6 +1,6 @@
-import pytest
-
 from typing import Dict  # noqa (mypy/lint fight)
+
+import pytest
 
 import hashdial
 

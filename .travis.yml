@@ -14,5 +14,14 @@ script:
   # building on 3.4/3.5.
   - pre-commit run -a --show-diff-on-failure mypy
   - pre-commit run -a --show-diff-on-failure flake8
+  - pre-commit run -a --show-diff-on-failure pyupgrade
+  - pre-commit run -a --show-diff-on-failure reorder-python-imports
+  - pre-commit run -a --show-diff-on-failure check-docstring-first
+  - pre-commit run -a --show-diff-on-failure check-merge-conflict
+  - pre-commit run -a --show-diff-on-failure check-vcs-permalinks
+  - pre-commit run -a --show-diff-on-failure check-yaml
+  - pre-commit run -a --show-diff-on-failure debug-statements
+  - pre-commit run -a --show-diff-on-failure end-of-file-fixer
+  - pre-commit run -a --show-diff-on-failure trailing-whitespace
   - scripts/tests.sh
   - scripts/docs.sh

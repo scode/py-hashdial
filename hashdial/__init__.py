@@ -37,9 +37,8 @@ API
 import hashlib
 import math
 import sys
-
-from typing import TypeVar
 from typing import Sequence
+from typing import TypeVar
 
 DEFAULT_SEED = b""
 
