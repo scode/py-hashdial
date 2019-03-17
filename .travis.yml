@@ -9,6 +9,10 @@ install:
   - pip install pre-commit
 
 script:
-  - pre-commit run -a --show-diff-on-failure
+  # black (the formatter) is one of our pre-commit hooks, but it requires at least Python 3.6. Separate invocations
+  # of pre-commit for each hook *except* black is our way of excluding black in CI in order to allow us to keep
+  # building on 3.4/3.5.
+  - pre-commit run -a --show-diff-on-failure mypy
+  - pre-commit run -a --show-diff-on-failure flake8
   - scripts/tests.sh
   - scripts/docs.sh

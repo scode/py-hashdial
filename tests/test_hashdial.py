@@ -11,7 +11,7 @@ def test_hfloat_distribution() -> None:
 
     buckets = {}  # type: Dict[int, int]
     for n in range(NUM_SAMPLES):
-        f = hashdial._hfloat('{}'.format(n).encode('utf-8'), seed=b'')
+        f = hashdial._hfloat("{}".format(n).encode("utf-8"), seed=b"")
         assert f >= 0.0
         assert f <= 1.0
         bucket = int(f * NUM_BUCKETS)
@@ -24,7 +24,7 @@ def test_hfloat_distribution() -> None:
 
 
 def test_hfloat_uses_seed() -> None:
-    assert hashdial._hfloat(b't', seed=b'') != hashdial._hfloat(b't', seed=b'something')
+    assert hashdial._hfloat(b"t", seed=b"") != hashdial._hfloat(b"t", seed=b"something")
 
 
 def test_decide() -> None:
@@ -33,7 +33,7 @@ def test_decide() -> None:
 
     value_count = {}  # type: Dict[bool,int]
     for n in range(NUM_SAMPLES):
-        b = hashdial.decide('{}'.format(n).encode('utf-8'), PROBABILITY)
+        b = hashdial.decide("{}".format(n).encode("utf-8"), PROBABILITY)
         value_count[b] = value_count.get(b, 0) + 1
 
     assert value_count[True] > PROBABILITY * NUM_SAMPLES * 0.9
@@ -41,19 +41,19 @@ def test_decide() -> None:
 
 
 def test_decide_bad_probability() -> None:
-    hashdial.decide(''.encode(), 0.5)
+    hashdial.decide("".encode(), 0.5)
 
     with pytest.raises(ValueError) as exc_info:
-        hashdial.decide(''.encode(), -0.5)
-    assert str(exc_info.value) == 'probability (-0.5) must be >= 0.0'
+        hashdial.decide("".encode(), -0.5)
+    assert str(exc_info.value) == "probability (-0.5) must be >= 0.0"
 
     with pytest.raises(ValueError) as exc_info:
-        hashdial.decide(''.encode(), 1.5)
-    assert str(exc_info.value) == 'probability (1.5) must be <= 1.0'
+        hashdial.decide("".encode(), 1.5)
+    assert str(exc_info.value) == "probability (1.5) must be <= 1.0"
 
 
 def test_decide_seed() -> None:
-    assert hashdial.decide(b't', 0.5) != hashdial.decide(b't', 0.5, seed=b'test2')
+    assert hashdial.decide(b"t", 0.5) != hashdial.decide(b"t", 0.5, seed=b"test2")
 
 
 def test_range_distribution() -> None:
@@ -62,7 +62,7 @@ def test_range_distribution() -> None:
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.range('{}'.format(n).encode('utf-8'), 2, start=-1)
+        selected = hashdial.range("{}".format(n).encode("utf-8"), 2, start=-1)
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -73,14 +73,14 @@ def test_range_distribution() -> None:
 
 
 def test_range_seed() -> None:
-    assert hashdial.range(b't', 2) != hashdial.range(b't', 2, seed=b'test2')
+    assert hashdial.range(b"t", 2) != hashdial.range(b"t", 2, seed=b"test2")
 
 
 def test_range_large_diff() -> None:
     with pytest.raises(ValueError):
-        hashdial.range(b'', 2 ** 63)
+        hashdial.range(b"", 2 ** 63)
     with pytest.raises(ValueError):
-        hashdial.range(start=-(2 ** 63), stop=0, key=b'')
+        hashdial.range(start=-(2 ** 63), stop=0, key=b"")
 
 
 def test_select() -> None:
@@ -89,7 +89,7 @@ def test_select() -> None:
     values = {}  # type: Dict[int, int]
 
     for n in range(NUM_SAMPLES):
-        selected = hashdial.select('{}'.format(n).encode('utf-8'), [-1, 0, 1])
+        selected = hashdial.select("{}".format(n).encode("utf-8"), [-1, 0, 1])
         values[selected] = values.get(selected, 0) + 1
 
     assert set(values.keys()) == {-1, 0, 1}
@@ -100,9 +100,9 @@ def test_select() -> None:
 
 
 def test_select_seed() -> None:
-    assert hashdial.select(b't', [0, 1]) != hashdial.select(b't', [0, 1], seed=b'test2')
+    assert hashdial.select(b"t", [0, 1]) != hashdial.select(b"t", [0, 1], seed=b"test2")
 
 
 def test_select_empty_seq() -> None:
     with pytest.raises(ValueError):
-        hashdial.select(b'', [])
+        hashdial.select(b"", [])
