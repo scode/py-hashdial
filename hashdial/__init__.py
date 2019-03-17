@@ -41,19 +41,19 @@ import sys
 from typing import TypeVar
 from typing import Sequence
 
-DEFAULT_SEED = b''
+DEFAULT_SEED = b""
 
-_MAX_FLOAT_REPRESENTABLE_INT = 2**(sys.float_info.mant_dig) - 1
+_MAX_FLOAT_REPRESENTABLE_INT = 2 ** (sys.float_info.mant_dig) - 1
 
 
 def _hfloat(b: bytes, seed: bytes) -> float:
     h = hashlib.sha256()
     h.update(seed)
     h.update(b)
-    return float(int(h.hexdigest()[0:16], 16)) / 2**64
+    return float(int(h.hexdigest()[0:16], 16)) / 2 ** 64
 
 
-def decide(key: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
+def decide(key: bytes, probability: float, *, seed: bytes = DEFAULT_SEED) -> bool:
     """
     Decide between ``True`` and `False`` basd on ``key`` such that the probability of ``True`` for a given input
     over a large set of unique inputs is ``probability``.
@@ -71,14 +71,14 @@ def decide(key: bytes, probability: float, *, seed: bytes=DEFAULT_SEED) -> bool:
     :return: Whether to take the action.
     """
     if probability < 0.0:
-        raise ValueError('probability ({}) must be >= 0.0'.format(probability))
+        raise ValueError("probability ({}) must be >= 0.0".format(probability))
     if probability > 1.0:
-        raise ValueError('probability ({}) must be <= 1.0'.format(probability))
+        raise ValueError("probability ({}) must be <= 1.0".format(probability))
 
     return _hfloat(key, seed) < probability
 
 
-def range(key: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> int:
+def range(key: bytes, stop: int, *, start: int = 0, seed: bytes = DEFAULT_SEED) -> int:
     """
     Select an integer in range ``[start, stop)`` by hashing ``key``.
 
@@ -99,19 +99,23 @@ def range(key: bytes, stop: int, *, start: int=0, seed: bytes=DEFAULT_SEED) -> i
     :return: The selected integer.
     """
     if stop <= start:
-        raise ValueError('stop ({}) must be > start ({})'.format(stop, start))
+        raise ValueError("stop ({}) must be > start ({})".format(stop, start))
 
     if stop - start > _MAX_FLOAT_REPRESENTABLE_INT:
-        raise ValueError('stop-start must be <= {} due to limitations of floats',
-                         _MAX_FLOAT_REPRESENTABLE_INT)
+        raise ValueError(
+            "stop-start must be <= {} due to limitations of floats",
+            _MAX_FLOAT_REPRESENTABLE_INT,
+        )
 
     return int(start + math.floor((stop - start) * _hfloat(key, seed)))
 
 
-BucketType = TypeVar('BucketType')
+BucketType = TypeVar("BucketType")
 
 
-def select(key: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -> BucketType:
+def select(
+    key: bytes, seq: Sequence[BucketType], *, seed: bytes = DEFAULT_SEED
+) -> BucketType:
     """
     Select one of the elements in seq based on the hash of ``key``.
 
@@ -130,6 +134,6 @@ def select(key: bytes, seq: Sequence[BucketType], *, seed: bytes=DEFAULT_SEED) -
     :return: One of the elements in ``seq``.
     """
     if not seq:
-        raise ValueError('non-empty sequence required')
+        raise ValueError("non-empty sequence required")
 
     return seq[range(key, len(seq), seed=seed)]
