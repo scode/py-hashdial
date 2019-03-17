@@ -13,3 +13,4 @@ repos:
      - id: black
        language_version: python3.7
        require_serial: true  # work around https://github.com/ambv/black/issues/673
+       args: [--target-version=py34]
