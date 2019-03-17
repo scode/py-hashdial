@@ -1,35 +1,8 @@
 repos:
-#  - repo: https://github.com/pre-commit/pre-commit-hooks
-#    rev: v2.1.0
-#    hooks:
-#      - id: check-docstring-first
-#      - id: check-merge-conflict
-#      - id: check-vcs-permalinks
-#      - id: check-yaml
-#      - id: debug-statements
-#      - id: end-of-file-fixer
-#      - id: trailing-whitespace
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.7.7
     hooks:
       - id: flake8
-#  - repo: https://github.com/asottile/pyupgrade
-#    rev: v1.12.0
-#    hooks:
-#      - id: pyupgrade
-#        args: [--py36-plus]
-#  - repo: https://github.com/asottile/reorder_python_imports
-#    rev: v1.4.0
-#    hooks:
-#      - id: reorder-python-imports
-#        args: [--py3-plus]
-# Disabled until https://github.com/ambv/black/issues/759 is fixed to retain support for Python 3.4 and 3.5.
-#  - repo: https://github.com/ambv/black
-#    rev: 19.3b0
-#    hooks:
-#     - id: black
-#       language_version: python3
-#       require_serial: true  # work around https://github.com/ambv/black/issues/673
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.670-1
     hooks:
