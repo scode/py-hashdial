@@ -9,6 +9,7 @@ install:
   - pip install pre-commit
 
 script:
-  - pre-commit run -a --show-diff-on-failure
+  - pre-commit run -a --show-diff-on-failure mypy
+  - pre-commit run -a --show-diff-on-failure flake8
   - scripts/tests.sh
   - scripts/docs.sh
