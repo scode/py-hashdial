@@ -1,28 +1,56 @@
 language: python
-python:
-  - "3.4"
-  - "3.5"
-  - "3.6"
 
-install:
-  - pip install -r requirements-dev.txt
-  - pip install pre-commit
-
-script:
-  # Invoke invidivual hooks in order to allow us to exclude some in the CI environment when necessary.
-  - pre-commit run -a --show-diff-on-failure flake8
-  - pre-commit run -a --show-diff-on-failure mypy
-  # Black does not support Python's below 3.6.
-  # - pre-commit run -a --show-diff-on-failure black
-  - pre-commit run -a --show-diff-on-failure pyupgrade
-  # Import re-ordering appears to behave differently on Python 3.4.
-  # - pre-commit run -a --show-diff-on-failure reorder-python-imports
-  - pre-commit run -a --show-diff-on-failure check-docstring-first
-  - pre-commit run -a --show-diff-on-failure check-merge-conflict
-  - pre-commit run -a --show-diff-on-failure check-vcs-permalinks
-  - pre-commit run -a --show-diff-on-failure check-yaml
-  - pre-commit run -a --show-diff-on-failure debug-statements
-  - pre-commit run -a --show-diff-on-failure end-of-file-fixer
-  - pre-commit run -a --show-diff-on-failure trailing-whitespace
-  - scripts/tests.sh
-  - scripts/docs.sh
+matrix:
+  include:
+    - name: py34-test
+      python:
+        - "3.4"
+      install:
+        - pip install typing
+        - pip install pytest
+      script:
+        - scripts/tests.sh
+    - name: py35-test
+      python:
+        - "3.5"
+      install:
+        - pip install pytest
+      script:
+        - scripts/tests.sh
+    - name: py36-test
+      python:
+        - "3.6"
+      install:
+        - pip install pytest
+      script:
+        - scripts/tests.sh
+    - name: lint
+      python:
+        - "3.6"
+      install:
+        - pip install pre-commit
+      script:
+        # Invoke invidivual hooks in order to allow us to exclude some in the CI environment when necessary.
+        - pre-commit run -a --show-diff-on-failure flake8
+        - pre-commit run -a --show-diff-on-failure mypy
+        # Black does not support Python's below 3.6. That said, now that we're only running the linter on 3.6, we
+        # should re-enable it.
+        # - pre-commit run -a --show-diff-on-failure black
+        - pre-commit run -a --show-diff-on-failure pyupgrade
+        # Import re-ordering appears to behave differently on Python 3.4.
+        # - pre-commit run -a --show-diff-on-failure reorder-python-imports
+        - pre-commit run -a --show-diff-on-failure check-docstring-first
+        - pre-commit run -a --show-diff-on-failure check-merge-conflict
+        - pre-commit run -a --show-diff-on-failure check-vcs-permalinks
+        - pre-commit run -a --show-diff-on-failure check-yaml
+        - pre-commit run -a --show-diff-on-failure debug-statements
+        - pre-commit run -a --show-diff-on-failure end-of-file-fixer
+        - pre-commit run -a --show-diff-on-failure trailing-whitespace
+    - name: docs
+      python:
+        - "3.6"
+      install:
+        - pip install -r requirements-dev.txt
+        - pip install pre-commit
+      script:
+        - scripts/docs.sh
