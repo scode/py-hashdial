@@ -37,7 +37,9 @@ Take a look at `the documentation <http://py-hashdial.readthedocs.io/en/latest/>
     keywords="hashdial hashing decision",
     packages=find_packages(exclude=["docs", "scripts", "tests"]),
     python_requires=">3.4",
-    install_requires=[],
+    install_requires=[
+        "typing ; python_version<'3.5'",
+    ],
     extras_require={
         # see requirements-dev.in/requirements-dev.txt
     },
